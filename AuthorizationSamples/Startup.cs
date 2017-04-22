@@ -44,6 +44,7 @@ namespace AuthorizationSamples
             });
 
             services.AddSingleton<IAuthorizationHandler, OfficeHoursRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, AuthorRequirementHandler>();
             services.AddMvc();
         }
 

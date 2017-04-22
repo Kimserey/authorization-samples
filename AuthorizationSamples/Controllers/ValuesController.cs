@@ -12,6 +12,13 @@ namespace AuthorizationSamples.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
+        private IAuthorizationService _authorizationService;
+
+        public ValuesController(IAuthorizationService authorizationService)
+        {
+            _authorizationService = authorizationService;
+        }
+
         [HttpGet]
         [Authorize]
         public string Get()
@@ -31,6 +38,20 @@ namespace AuthorizationSamples.Controllers
         public string GetReport()
         {
             return $"{HttpContext.User.Identity.Name} is authorized!";
+        }
+
+        [HttpPut("report/{id}")]
+        public async Task<IActionResult> PutReport(string id)
+        {
+            var report = new Report { Author = "alice", Content = "" }; // Here we would get the resource from somewhere
+            if (await _authorizationService.AuthorizeAsync(HttpContext.User, report, new AuthorRequirement()))
+            {
+                return Ok();
+            }
+            else
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpGet("financereport")]
