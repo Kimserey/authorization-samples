@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json;
 
 namespace AuthorizationSamples.Controllers
 {
@@ -17,6 +18,8 @@ namespace AuthorizationSamples.Controllers
             var claims = new Claim[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, "alice"),
+                new Claim("roles", "admin"),
+                new Claim("roles", "user")
             };
 
             var jwt = new JwtSecurityToken(claims: claims);

@@ -47,7 +47,9 @@ namespace AuthorizationSamples
                 ValidateLifetime = false,
                 ValidateIssuerSigningKey = false,
                 ValidateActor = false,
-                RequireSignedTokens = false
+                RequireSignedTokens = false,
+                NameClaimType = JwtRegisteredClaimNames.Sub,
+                RoleClaimType = "roles"
             };
 
             // Remove all automatic mapping for inbound claims

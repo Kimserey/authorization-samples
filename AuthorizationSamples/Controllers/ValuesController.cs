@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace AuthorizationSamples.Controllers
 {
@@ -15,8 +16,14 @@ namespace AuthorizationSamples.Controllers
         [Authorize]
         public string Get()
         {
-            var subject = HttpContext.User.Claims.Single(claim => claim.Type == JwtRegisteredClaimNames.Sub);
-            return $"{subject.Value} is authorized!";
+            return $"{HttpContext.User.Identity.Name} is authorized!";
+        }
+
+        [HttpGet("report")]
+        [Authorize(Roles = "user")]
+        public string GetReport()
+        {
+            return $"{HttpContext.User.Identity.Name} is authorized!";
         }
     }
 }
