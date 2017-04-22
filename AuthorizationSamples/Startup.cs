@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AuthorizationSamples
 {
@@ -29,7 +30,20 @@ namespace AuthorizationSamples
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("hasReportAccess", 
+                    policy => policy
+                        .RequireClaim("accesses", "report")
+                        .RequireRole("user"));
+
+                opt.AddPolicy("accessibleOnlyDuringOfficeHours", 
+                    policy => policy.AddRequirements(new OfficeHoursRequirement(8, 23))
+                        .RequireClaim("accesses", "report")
+                        .RequireRole("user"));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, OfficeHoursRequirementHandler>();
             services.AddMvc();
         }
 

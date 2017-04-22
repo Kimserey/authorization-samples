@@ -19,9 +19,23 @@ namespace AuthorizationSamples.Controllers
             return $"{HttpContext.User.Identity.Name} is authorized!";
         }
 
-        [HttpGet("report")]
+        [HttpGet("profile")]
         [Authorize(Roles = "user")]
+        public string GetProfile()
+        {
+            return $"{HttpContext.User.Identity.Name} is authorized!";
+        }
+
+        [HttpGet("report")]
+        [Authorize(Policy = "hasReportAccess")]
         public string GetReport()
+        {
+            return $"{HttpContext.User.Identity.Name} is authorized!";
+        }
+
+        [HttpGet("financereport")]
+        [Authorize(Policy = "accessibleOnlyDuringOfficeHours")]
+        public string GetFinanceReport()
         {
             return $"{HttpContext.User.Identity.Name} is authorized!";
         }

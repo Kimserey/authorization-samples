@@ -19,7 +19,8 @@ namespace AuthorizationSamples.Controllers
             {
                 new Claim(JwtRegisteredClaimNames.Sub, "alice"),
                 new Claim("roles", "admin"),
-                new Claim("roles", "user")
+                new Claim("roles", "user"),
+                new Claim("accesses", "report")
             };
 
             var jwt = new JwtSecurityToken(claims: claims);
