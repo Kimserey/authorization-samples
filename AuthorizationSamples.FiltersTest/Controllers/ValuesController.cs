@@ -22,5 +22,21 @@ namespace AuthorizationSamples.FiltersTest.Controllers
         {
             return "works";
         }
+
+        // When filter is not registered:
+        // System.InvalidOperationException: No service for type 'AuthorizationSamples.FiltersTest.Hello3Filter' has been registered.
+        [HttpGet("3")]
+        [ServiceFilter(typeof(Hello3Filter))]
+        public string Get3()
+        {
+            return "works";
+        }
+
+        [HttpGet("4")]
+        [TypeFilter(typeof(Hello4Filter), Arguments = new[] { "some arguments" })]
+        public string Get4()
+        {
+            return "works";
+        }
     }
 }
