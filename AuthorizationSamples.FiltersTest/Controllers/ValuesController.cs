@@ -33,8 +33,15 @@ namespace AuthorizationSamples.FiltersTest.Controllers
         }
 
         [HttpGet("4")]
-        [TypeFilter(typeof(Hello4Filter), Arguments = new[] { "some arguments" })]
+        [TypeFilter(typeof(Hello4Filter), Arguments = new[] { "some argument" })]
         public string Get4()
+        {
+            return "works";
+        }
+
+        [HttpGet("5")]
+        [Hello5Filter("some argument")]
+        public string Get5()
         {
             return "works";
         }

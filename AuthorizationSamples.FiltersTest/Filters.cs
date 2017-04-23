@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 // Filter doc
 // https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters
@@ -80,5 +81,49 @@ namespace AuthorizationSamples.FiltersTest
 
         public void OnActionExecuting(ActionExecutingContext context)
         { }
+    }
+
+    // Service filter and Type filter are implementation of Filter factory.
+    // If we need more control on the arguments and the overall instantiation of the attribute, 
+    // we can implement IFilterFactory.
+    public class Hello5FilterAttribute: Attribute, IFilterFactory
+    {
+        private string _extraText;
+
+        public bool IsReusable => true;
+
+        public Hello5FilterAttribute(string extraText)
+        {
+            _extraText = extraText;
+        }
+
+        public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
+        {
+            // GetRequiredService<>() is available in Microsoft.Extensions.DependencyInjection
+            // GetRequiredService VS GetService is that Required will throw exception when service can't be found, while the other will return null.
+            return new Hello5FilterImpl(
+                serviceProvider.GetRequiredService<IHelloService>(),
+                _extraText,
+                new HelloOptions { Text = "text from options" });
+        }
+
+        private class Hello5FilterImpl : ActionFilterAttribute
+        {
+            private HelloOptions _testWithObject;
+            private string _extraText;
+            private IHelloService _service;
+
+            public Hello5FilterImpl(IHelloService service, string extraText, HelloOptions testWithObject)
+            {
+                _service = service;
+                _extraText = extraText;
+                _testWithObject = testWithObject;
+            }
+
+            public override void OnActionExecuted(ActionExecutedContext context)
+            {
+                Console.WriteLine($"{_service.SayHello()} | {_extraText} | {_testWithObject.Text}");
+            }
+        }
     }
 }
