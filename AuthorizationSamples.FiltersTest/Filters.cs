@@ -90,7 +90,8 @@ namespace AuthorizationSamples.FiltersTest
     {
         private string _extraText;
 
-        public bool IsReusable => true;
+        // Indicates if the filter created can be reused accross requests.
+        public bool IsReusable => false;
 
         public Hello5FilterAttribute(string extraText)
         {
